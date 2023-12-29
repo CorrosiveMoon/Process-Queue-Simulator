@@ -5,12 +5,30 @@
 
 using namespace std;
 
+/**
+ * The struct Process represents a process with arrival time, execution time, and start processing time
+ * attributes.
+ * @property {int} arrival_time - The arrival_time property represents the time at which a process
+ * arrives in the system. It indicates when the process enters the system and is ready to be executed.
+ * @property {int} execution_time - The execution_time property represents the amount of time it takes
+ * for a process to complete its execution. It is typically measured in units of time, such as
+ * milliseconds or seconds.
+ * @property {int} start_processing_time - The "start_processing_time" property is used to track when a
+ * process starts being processed. It is used to keep track of the time at which a process begins its
+ * execution.
+ */
 struct Process {
     int arrival_time;
     int execution_time;
-    int start_processing_time; // To track when the process starts being processed
+    int start_processing_time; 
 };
 
+/**
+ * This C++ program simulates a multi-queue system where processes arrive randomly and are processed
+ * based on their execution time.
+ * 
+ * @return The main function is returning an integer value of 0.
+ */
 int main() {
     int num_pairs, probability, max_execution_time, duration, seed;
 
@@ -51,8 +69,8 @@ int main() {
     cin >> seed;
 
     srand(seed);
-
-    queue<Process> queues[10]; // Array of queues
+// Array of queues
+    queue<Process> queues[10]; 
 
     int tick;
     int totalProcessed = 0;
@@ -60,12 +78,12 @@ int main() {
     int longestWaitTime = 0;
 
     for (tick = 1; tick <= duration; tick++) {
-        // Process arrivals
+        //Loop that processes arrivals
         if (rand() % 100 < probability) {
             Process new_process;
             new_process.arrival_time = tick;
             new_process.execution_time = rand() % max_execution_time + 1;
-            new_process.start_processing_time = -1; // Initialize to -1
+            new_process.start_processing_time = -1; 
 
             int shortest_queue = 0;
             for (int i = 1; i < num_pairs; i++) {
@@ -77,20 +95,20 @@ int main() {
             queues[shortest_queue].push(new_process);
         }
 
-        // Process the queues
+        //Loop that processes the queues
         for (int i = 0; i < num_pairs; i++) {
             if (!queues[i].empty()) {
                 Process &front_process = queues[i].front();
 
-                // Set start_processing_time when the process reaches the front
+                //Setting start_processing_time when the process reaches the front
                 if (front_process.start_processing_time == -1) {
                     front_process.start_processing_time = tick;
                 }
 
-                // Decrement the execution time
+                //Decrementing the execution time
                 front_process.execution_time--;
 
-                // Check if the process is completed
+                //Checking if the process is completed
                 if (front_process.execution_time == 0) {
                     int waitTime = front_process.start_processing_time - front_process.arrival_time;
                     totalWaitTime += waitTime;
@@ -101,7 +119,7 @@ int main() {
             }
         }
 
-        // Output snapshot of the system at this tick
+        //Output of the system at this tick
         cout << "Tick " << tick << ": ";
         for (int i = 0; i < num_pairs; i++) {
             cout << "Queue " << i + 1 << ": " << queues[i].size() << " ";
@@ -109,13 +127,13 @@ int main() {
         cout << endl;
     }
 
-    // Calculate remaining processes in the queues after the end of the simulation
+    //Calculating remaining processes in the queues after the end of the simulation
     int remainingProcesses = 0;
     for (int i = 0; i < num_pairs; i++) {
         remainingProcesses += queues[i].size();
     }
 
-    // Display statistics
+    //Displaying statistics
     cout << totalProcessed << " processes were processed with an average wait time of ";
     if (totalProcessed > 0) {
         cout << static_cast<double>(totalWaitTime) / totalProcessed << " ticks." << endl;
